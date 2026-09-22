@@ -1,5 +1,8 @@
-const getAllCustomers = (req, res) => {
-  res.send("Here we will send all customers list");
+const prisma = require("../prismaClient");
+
+const getAllCustomers = async (req, res) => {
+    const customers = await prisma.customer.findMany();
+    res.json(customers);
 };
 
 module.exports = { getAllCustomers };
