@@ -5,4 +5,14 @@ const getAllCustomers = async (req, res) => {
     res.json(customers);
 };
 
-module.exports = { getAllCustomers };
+const createCustomer = async (req, res) => {
+    const { name, mobile, email, address, city } = req.body;
+
+    const newCustomer = await prisma.customer.create({
+        data: { name, mobile, email, address, city },
+    });
+
+    res.json(newCustomer);
+};
+
+module.exports = { getAllCustomers, createCustomer };

@@ -3,6 +3,8 @@ const customerRoutes = require("./src/routes/customerRoutes");
 
 const app = express();
 
+app.use(express.json());
+
 const PORT = 5000;
 
 app.use("/api/customers", customerRoutes);
