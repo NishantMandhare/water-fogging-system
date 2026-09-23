@@ -3,8 +3,11 @@ const customerRoutes = require("./src/routes/customerRoutes");
 const authRoutes = require("./src/routes/authRoutes");
 const inquiryRoutes = require("./src/routes/inquiryRoutes");
 
+const cors = require("cors");
+
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 const PORT = 5000;
