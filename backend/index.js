@@ -6,6 +6,7 @@ const siteVisitRoutes = require("./src/routes/siteVisitRoutes");
 const productRoutes = require("./src/routes/productRoutes");
 const quotationRoutes = require("./src/routes/quotationRoutes");
 const invoiceRoutes = require("./src/routes/invoiceRoutes");
+const paymentRoutes = require("./src/routes/paymentRoutes");
 
 const cors = require("cors");
 
@@ -24,6 +25,7 @@ app.use("/api/sitevisits", siteVisitRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/quotations", quotationRoutes);
 app.use("/api/invoices", invoiceRoutes);
+app.use("/api/payments", paymentRoutes);
 
 app.get("/", (req, res) => {
     res.send("Backend server is running!");
