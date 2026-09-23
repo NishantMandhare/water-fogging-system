@@ -36,4 +36,32 @@ const updateInquiryStatus = async (req, res) => {
     res.json(updatedInquiry);
 };
 
-module.exports = { getAllInquiries, createInquiry, updateInquiryStatus };
+const updateInquiry = async (req, res) => {
+    const { id } = req.params;
+    const { requirement, area, location, budget, source, notes, followUpDate } = req.body;
+
+    const updatedInquiry = await prisma.inquiry.update({
+        where: { id: Number(id) },
+        data: { requirement, area, location, budget, source, notes, followUpDate },
+    });
+
+    res.json(updatedInquiry);
+};
+
+const deleteInquiry = async (req, res) => {
+    const { id } = req.params;
+
+    await prisma.inquiry.delete({
+        where: { id: Number(id) },
+    });
+
+    res.json({ message: "Inquiry deleted successfully" });
+};
+
+module.exports = {
+    getAllInquiries,
+    createInquiry,
+    updateInquiryStatus,
+    updateInquiry,
+    deleteInquiry,
+};
