@@ -21,6 +21,7 @@ model Customer {
   address   String?
   city      String?
   createdAt DateTime @default(now())
+  inquiries Inquiry[]
 }
 
 model User {
@@ -30,4 +31,19 @@ model User {
   password  String
   role      String   @default("SALES")
   createdAt DateTime @default(now())
+}
+
+model Inquiry {
+  id             Int      @id @default(autoincrement())
+  requirement    String
+  area           String?
+  location       String?
+  budget         Float?
+  source         String?
+  status         String   @default("NEW")
+  notes          String?
+  followUpDate   DateTime?
+  createdAt      DateTime @default(now())
+  customer       Customer @relation(fields: [customerId], references: [id])
+  customerId     Int
 }
