@@ -3,6 +3,7 @@ const customerRoutes = require("./src/routes/customerRoutes");
 const authRoutes = require("./src/routes/authRoutes");
 const inquiryRoutes = require("./src/routes/inquiryRoutes");
 const siteVisitRoutes = require("./src/routes/siteVisitRoutes");
+const productRoutes = require("./src/routes/productRoutes");
 
 const cors = require("cors");
 
@@ -18,6 +19,7 @@ app.use("/api/customers", customerRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/inquiries", inquiryRoutes);
 app.use("/api/sitevisits", siteVisitRoutes);
+app.use("/api/products", productRoutes);
 
 app.get("/", (req, res) => {
     res.send("Backend server is running!");

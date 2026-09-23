@@ -62,3 +62,16 @@ model SiteVisit {
   inquiry               Inquiry  @relation(fields: [inquiryId], references: [id])
   inquiryId             Int
 }
+
+model Product {
+  id           Int      @id @default(autoincrement())
+  name         String
+  sku          String?  @unique
+  category     String?
+  description  String?
+  costPrice    Float?
+  sellingPrice Float
+  stock        Int      @default(0)
+  minStock     Int      @default(5)
+  createdAt    DateTime @default(now())
+}
