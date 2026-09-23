@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const router = useRouter();
 
     const handleLogin = async () => {
         const response = await fetch("http://localhost:5000/api/auth/login", {
@@ -14,7 +16,13 @@ export default function LoginPage() {
         });
 
         const data = await response.json();
-        console.log(data);
+
+        if (data.token) {
+            localStorage.setItem("token", data.token);
+            router.push("/dashboard");
+        } else {
+            alert("Login failed: " + data.message);
+        }
     };
 
     return (
