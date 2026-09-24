@@ -15,41 +15,45 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const fetchCustomers = async () => {
-  try {
-    const data = await api.get("/customers");
-    setCustomers(data);
-  } catch (error) {
-    alert((error as Error).message);
-  }
-};
+      try {
+        const data = await api.get("/customers");
+        setCustomers(data);
+      } catch (error) {
+        alert((error as Error).message);
+      }
+    };
 
     fetchCustomers();
   }, []);
 
   return (
-    <div style={{ padding: "40px" }}>
-      <h1>Dashboard</h1>
-      <h2>Customers</h2>
-      <table border={1} cellPadding={8}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Mobile</th>
-            <th>City</th>
-          </tr>
-        </thead>
-        <tbody>
-          {customers.map((customer) => (
-            <tr key={customer.id}>
-              <td>{customer.id}</td>
-              <td>{customer.name}</td>
-              <td>{customer.mobile}</td>
-              <td>{customer.city}</td>
+    <div>
+      <h1 className="text-2xl font-bold">Dashboard</h1>
+
+      <div className="mt-6 rounded-lg border border-slate-700 p-4">
+        <h2 className="mb-4 text-lg font-semibold">Customers</h2>
+
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr className="border-b border-slate-700 text-slate-400">
+              <th className="px-3 py-2">ID</th>
+              <th className="px-3 py-2">Name</th>
+              <th className="px-3 py-2">Mobile</th>
+              <th className="px-3 py-2">City</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {customers.map((customer) => (
+              <tr key={customer.id} className="border-b border-slate-800">
+                <td className="px-3 py-2">{customer.id}</td>
+                <td className="px-3 py-2">{customer.name}</td>
+                <td className="px-3 py-2">{customer.mobile}</td>
+                <td className="px-3 py-2">{customer.city}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

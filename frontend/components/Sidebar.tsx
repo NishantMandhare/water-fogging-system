@@ -17,30 +17,30 @@ export default function Sidebar() {
     };
 
     return (
-        <aside
-            style={{
-                width: "220px",
-                minHeight: "100vh",
-                padding: "20px",
-                borderRight: "1px solid #333",
-                display: "flex",
-                flexDirection: "column",
-            }}
-        >
-            <h2>Fogging System</h2>
-            <nav style={{ flex: 1 }}>
+        <aside className="flex min-h-screen w-64 flex-col bg-slate-900 p-4 text-white">
+            <h2 className="mb-6 text-xl font-bold">Fogging System</h2>
+
+            <nav className="flex-1 space-y-1">
                 {menuItems.map((item) => (
-                    <div key={item.href} style={{ margin: "12px 0" }}>
-                        <Link
-                            href={item.href}
-                            style={{ fontWeight: pathname === item.href ? "bold" : "normal" }}
-                        >
-                            {item.label}
-                        </Link>
-                    </div>
+                    <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`block rounded-md px-3 py-2 text-sm ${pathname === item.href
+                                ? "bg-blue-600 font-semibold"
+                                : "text-slate-300 hover:bg-slate-800"
+                            }`}
+                    >
+                        {item.label}
+                    </Link>
                 ))}
             </nav>
-            <button onClick={handleLogout}>Logout</button>
+
+            <button
+                onClick={handleLogout}
+                className="rounded-md bg-slate-800 px-3 py-2 text-sm hover:bg-red-600"
+            >
+                Logout
+            </button>
         </aside>
     );
 }
