@@ -24,6 +24,7 @@ model Customer {
   inquiries Inquiry[]
   quotations Quotation[]
   invoices  Invoice[]
+  installations Installation[]
 }
 
 model User {
@@ -33,6 +34,7 @@ model User {
   password  String
   role      String   @default("SALES")
   createdAt DateTime @default(now())
+  installations Installation[]
 }
 
 model Inquiry {
@@ -138,4 +140,19 @@ model Payment {
   createdAt DateTime @default(now())
   invoice   Invoice  @relation(fields: [invoiceId], references: [id])
   invoiceId Int
+}
+
+model Installation {
+  id             Int       @id @default(autoincrement())
+  status         String    @default("PLANNING")
+  scheduledDate  DateTime?
+  completedDate  DateTime?
+  materialsUsed  String?
+  laborCost      Float?
+  notes          String?
+  createdAt      DateTime  @default(now())
+  customer       Customer  @relation(fields: [customerId], references: [id])
+  customerId     Int
+  technician     User      @relation(fields: [technicianId], references: [id])
+  technicianId   Int
 }
