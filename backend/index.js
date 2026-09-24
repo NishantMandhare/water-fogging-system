@@ -8,6 +8,7 @@ const quotationRoutes = require("./src/routes/quotationRoutes");
 const invoiceRoutes = require("./src/routes/invoiceRoutes");
 const paymentRoutes = require("./src/routes/paymentRoutes");
 const installationRoutes = require("./src/routes/installationRoutes");
+const serviceTicketRoutes = require("./src/routes/serviceTicketRoutes");
 
 const cors = require("cors");
 
@@ -28,6 +29,7 @@ app.use("/api/quotations", quotationRoutes);
 app.use("/api/invoices", invoiceRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/installations", installationRoutes);
+app.use("/api/servicetickets", serviceTicketRoutes);
 
 app.get("/", (req, res) => {
     res.send("Backend server is running!");
