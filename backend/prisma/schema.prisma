@@ -26,6 +26,7 @@ model Customer {
   invoices  Invoice[]
   installations Installation[]
   serviceTickets ServiceTicket[]
+  amcs AMC[]
 }
 
 model User {
@@ -173,4 +174,18 @@ model ServiceTicket {
   customerId     Int
   technician     User?     @relation(fields: [technicianId], references: [id])
   technicianId   Int?
+}
+
+model AMC {
+  id                  Int      @id @default(autoincrement())
+  contractAmount      Float
+  startDate           DateTime
+  endDate             DateTime
+  totalServices       Int
+  servicesCompleted   Int      @default(0)
+  status              String   @default("ACTIVE")
+  notes               String?
+  createdAt           DateTime @default(now())
+  customer            Customer @relation(fields: [customerId], references: [id])
+  customerId          Int
 }
