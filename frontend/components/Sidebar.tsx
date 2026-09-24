@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 const menuItems = [
     { label: "Dashboard", href: "/dashboard" },
+    { label: "Customers", href: "/customers" },
 ];
 
 export default function Sidebar() {
@@ -26,8 +27,8 @@ export default function Sidebar() {
                         key={item.href}
                         href={item.href}
                         className={`block rounded-md px-3 py-2 text-sm ${pathname === item.href
-                                ? "bg-blue-600 font-semibold"
-                                : "text-slate-300 hover:bg-slate-800"
+                            ? "bg-blue-600 font-semibold"
+                            : "text-slate-300 hover:bg-slate-800"
                             }`}
                     >
                         {item.label}
