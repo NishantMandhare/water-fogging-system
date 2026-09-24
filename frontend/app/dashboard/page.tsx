@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { api } from "@/lib/api";
 
 interface Customer {
   id: number;
@@ -14,15 +15,13 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const fetchCustomers = async () => {
-      const token = localStorage.getItem("token");
-
-      const response = await fetch("http://localhost:5000/api/customers", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const data = await response.json();
-      setCustomers(data);
-    };
+  try {
+    const data = await api.get("/customers");
+    setCustomers(data);
+  } catch (error) {
+    alert((error as Error).message);
+  }
+};
 
     fetchCustomers();
   }, []);
