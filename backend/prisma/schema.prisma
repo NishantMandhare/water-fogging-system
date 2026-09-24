@@ -25,6 +25,7 @@ model Customer {
   quotations Quotation[]
   invoices  Invoice[]
   installations Installation[]
+  serviceTickets ServiceTicket[]
 }
 
 model User {
@@ -35,6 +36,7 @@ model User {
   role      String   @default("SALES")
   createdAt DateTime @default(now())
   installations Installation[]
+  serviceTickets ServiceTicket[]
 }
 
 model Inquiry {
@@ -155,4 +157,20 @@ model Installation {
   customerId     Int
   technician     User      @relation(fields: [technicianId], references: [id])
   technicianId   Int
+}
+
+model ServiceTicket {
+  id             Int       @id @default(autoincrement())
+  type           String
+  priority       String    @default("MEDIUM")
+  status         String    @default("OPEN")
+  description    String
+  resolution     String?
+  materialsUsed  String?
+  createdAt      DateTime  @default(now())
+  resolvedAt     DateTime?
+  customer       Customer  @relation(fields: [customerId], references: [id])
+  customerId     Int
+  technician     User?     @relation(fields: [technicianId], references: [id])
+  technicianId   Int?
 }
