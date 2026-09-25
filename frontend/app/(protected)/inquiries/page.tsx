@@ -23,6 +23,7 @@ export default function InquiriesPage() {
     const [inquiries, setInquiries] = useState<Inquiry[]>([]);
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [showForm, setShowForm] = useState(false);
+    const [editingId, setEditingId] = useState<number | null>(null);
     const [customerId, setCustomerId] = useState("");
     const [requirement, setRequirement] = useState("");
     const [area, setArea] = useState("");
@@ -50,19 +51,30 @@ export default function InquiriesPage() {
 
     const handleSubmit = async () => {
         try {
-            await api.post("/inquiries", {
-                customerId,
-                requirement,
-                area,
-                location,
-                budget,
-                source,
-            });
+            if (editingId) {
+                await api.put(`/inquiries/${editingId}`, {
+                    requirement,
+                    area,
+                    location,
+                    budget: budget ? Number(budget) : null,
+                    source,
+                });
+            } else {
+                await api.post("/inquiries", {
+                    customerId,
+                    requirement,
+                    area,
+                    location,
+                    budget: budget ? Number(budget) : null,
+                    source,
+                });
+            }
 
             const data = await api.get("/inquiries");
             setInquiries(data);
 
             setShowForm(false);
+            setEditingId(null);
             setCustomerId("");
             setRequirement("");
             setArea("");
@@ -93,6 +105,29 @@ export default function InquiriesPage() {
         }
     };
 
+    const handleEdit = (inquiry: Inquiry) => {
+        setEditingId(inquiry.id);
+        setCustomerId(String(inquiry.customer.id));
+        setRequirement(inquiry.requirement || "");
+        setArea(inquiry.area || "");
+        setLocation(inquiry.location || "");
+        setBudget(inquiry.budget || "");
+        setSource(inquiry.source || "");
+        setShowForm(true);
+    };
+
+    const handleDelete = async (id: number) => {
+        const confirmed = confirm("Delete this inquiry?");
+        if (!confirmed) return;
+
+        try {
+            await api.delete(`/inquiries/${id}`);
+            const data = await api.get("/inquiries");
+            setInquiries(data);
+        } catch (error) {
+            alert((error as Error).message);
+        }
+    };
 
     return (
         <div>
@@ -101,6 +136,7 @@ export default function InquiriesPage() {
                 <button
                     onClick={() => {
                         setShowForm(!showForm);
+                        setEditingId(null);
                         setCustomerId("");
                         setRequirement("");
                         setArea("");
@@ -119,7 +155,8 @@ export default function InquiriesPage() {
                     <select
                         value={customerId}
                         onChange={(e) => setCustomerId(e.target.value)}
-                        className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white"
+                        disabled={editingId !== null}
+                        className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white disabled:opacity-50"
                     >
                         <option value="">Select Customer</option>
                         {customers.map((customer) => (
@@ -164,7 +201,7 @@ export default function InquiriesPage() {
                         onClick={handleSubmit}
                         className="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold hover:bg-green-500 sm:col-span-2"
                     >
-                        Save
+                        {editingId ? "Update" : "Save"}
                     </button>
                 </div>
             )}
@@ -178,6 +215,7 @@ export default function InquiriesPage() {
                             <th className="px-3 py-2">Area</th>
                             <th className="px-3 py-2">Source</th>
                             <th className="px-3 py-2">Status</th>
+                            <th className="px-3 py-2"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -199,6 +237,20 @@ export default function InquiriesPage() {
                                             </option>
                                         ))}
                                     </select>
+                                </td>
+                                <td className="space-x-3 px-3 py-2">
+                                    <button
+                                        onClick={() => handleEdit(inquiry)}
+                                        className="text-blue-400 hover:underline"
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(inquiry.id)}
+                                        className="text-red-500 hover:underline"
+                                    >
+                                        Delete
+                                    </button>
                                 </td>
                             </tr>
                         ))}
