@@ -74,6 +74,26 @@ export default function InquiriesPage() {
         }
     };
 
+    const statusOptions = [
+        "NEW",
+        "CONTACTED",
+        "SITE_VISIT_SCHEDULED",
+        "QUOTED",
+        "CONVERTED",
+        "LOST",
+    ];
+
+    const handleStatusChange = async (id: number, newStatus: string) => {
+        try {
+            await api.patch(`/inquiries/${id}/status`, { status: newStatus });
+            const data = await api.get("/inquiries");
+            setInquiries(data);
+        } catch (error) {
+            alert((error as Error).message);
+        }
+    };
+
+
     return (
         <div>
             <div className="flex items-center justify-between">
@@ -167,7 +187,19 @@ export default function InquiriesPage() {
                                 <td className="px-3 py-2">{inquiry.requirement}</td>
                                 <td className="px-3 py-2">{inquiry.area}</td>
                                 <td className="px-3 py-2">{inquiry.source}</td>
-                                <td className="px-3 py-2">{inquiry.status}</td>
+                                <td className="px-3 py-2">
+                                    <select
+                                        value={inquiry.status}
+                                        onChange={(e) => handleStatusChange(inquiry.id, e.target.value)}
+                                        className="rounded-md border border-slate-700 bg-slate-900 px-2 py-1 text-xs text-white"
+                                    >
+                                        {statusOptions.map((option) => (
+                                            <option key={option} value={option}>
+                                                {option}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
