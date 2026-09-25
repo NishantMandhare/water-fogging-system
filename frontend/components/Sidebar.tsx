@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 const menuItems = [
     { label: "Dashboard", href: "/dashboard" },
     { label: "Customers", href: "/customers" },
+    { label: "Products", href: "/products" },
 ];
 
 export default function Sidebar() {
