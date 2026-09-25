@@ -7,6 +7,7 @@ const menuItems = [
     { label: "Dashboard", href: "/dashboard" },
     { label: "Customers", href: "/customers" },
     { label: "Products", href: "/products" },
+    { label: "Inquiries", href: "/inquiries" },
 ];
 
 export default function Sidebar() {
