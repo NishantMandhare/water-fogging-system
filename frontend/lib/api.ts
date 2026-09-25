@@ -11,10 +11,11 @@ async function request(path: string, options: RequestInit = {}) {
         },
     });
 
-    const data = await response.json();
+    const isEmpty = response.status === 204;
+    const data = isEmpty ? null : await response.json();
 
     if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
+        throw new Error(data?.message || "Something went wrong");
     }
 
     return data;
@@ -24,4 +25,5 @@ export const api = {
     get: (path: string) => request(path),
     post: (path: string, body: unknown) =>
         request(path, { method: "POST", body: JSON.stringify(body) }),
+    delete: (path: string) => request(path, { method: "DELETE" }),
 };

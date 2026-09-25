@@ -46,6 +46,19 @@ export default function CustomersPage() {
         }
     };
 
+    const handleDelete = async (id: number) => {
+        const confirmed = confirm("Delete this customer?");
+        if (!confirmed) return;
+
+        try {
+            await api.delete(`/customers/${id}`);
+            const data = await api.get("/customers");
+            setCustomers(data);
+        } catch (error) {
+            alert((error as Error).message);
+        }
+    };
+
     return (
         <div>
             <div className="flex items-center justify-between">
@@ -95,6 +108,7 @@ export default function CustomersPage() {
                             <th className="px-3 py-2">Name</th>
                             <th className="px-3 py-2">Mobile</th>
                             <th className="px-3 py-2">City</th>
+                            <th className="px-3 py-2"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -104,6 +118,14 @@ export default function CustomersPage() {
                                 <td className="px-3 py-2">{customer.name}</td>
                                 <td className="px-3 py-2">{customer.mobile}</td>
                                 <td className="px-3 py-2">{customer.city}</td>
+                                <td className="px-3 py-2">
+                                    <button
+                                        onClick={() => handleDelete(customer.id)}
+                                        className="text-red-500 hover:underline"
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
