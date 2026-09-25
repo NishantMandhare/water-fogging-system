@@ -13,6 +13,7 @@ interface Customer {
 export default function CustomersPage() {
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [showForm, setShowForm] = useState(false);
+    const [editingId, setEditingId] = useState<number | null>(null);
     const [name, setName] = useState("");
     const [mobile, setMobile] = useState("");
     const [city, setCity] = useState("");
@@ -30,14 +31,19 @@ export default function CustomersPage() {
         fetchCustomers();
     }, []);
 
-    const handleSave = async () => {
+    const handleSubmit = async () => {
         try {
-            await api.post("/customers", { name, mobile, city });
+            if (editingId) {
+                await api.put(`/customers/${editingId}`, { name, mobile, city });
+            } else {
+                await api.post("/customers", { name, mobile, city });
+            }
 
             const data = await api.get("/customers");
             setCustomers(data);
 
-            alert("Customer saved!");
+            setShowForm(false);
+            setEditingId(null);
             setName("");
             setMobile("");
             setCity("");
@@ -45,6 +51,15 @@ export default function CustomersPage() {
             alert((error as Error).message);
         }
     };
+
+    const handleEdit = (customer: Customer) => {
+        setEditingId(customer.id);
+        setName(customer.name);
+        setMobile(customer.mobile);
+        setCity(customer.city || "");
+        setShowForm(true);
+    };
+
 
     const handleDelete = async (id: number) => {
         const confirmed = confirm("Delete this customer?");
@@ -64,7 +79,13 @@ export default function CustomersPage() {
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold">Customers</h1>
                 <button
-                    onClick={() => setShowForm(!showForm)}
+                    onClick={() => {
+                        setShowForm(!showForm);
+                        setEditingId(null);
+                        setName("");
+                        setMobile("");
+                        setCity("");
+                    }}
                     className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold hover:bg-blue-500"
                 >
                     {showForm ? "Cancel" : "Add Customer"}
@@ -92,10 +113,10 @@ export default function CustomersPage() {
                         className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white"
                     />
                     <button
-                        onClick={handleSave}
+                        onClick={handleSubmit}
                         className="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold hover:bg-green-500"
                     >
-                        Save
+                        {editingId ? "Update" : "Save"}
                     </button>
                 </div>
             )}
@@ -118,7 +139,13 @@ export default function CustomersPage() {
                                 <td className="px-3 py-2">{customer.name}</td>
                                 <td className="px-3 py-2">{customer.mobile}</td>
                                 <td className="px-3 py-2">{customer.city}</td>
-                                <td className="px-3 py-2">
+                                <td className="space-x-3 px-3 py-2">
+                                    <button
+                                        onClick={() => handleEdit(customer)}
+                                        className="text-blue-400 hover:underline"
+                                    >
+                                        Edit
+                                    </button>
                                     <button
                                         onClick={() => handleDelete(customer.id)}
                                         className="text-red-500 hover:underline"
