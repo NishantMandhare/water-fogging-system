@@ -2,25 +2,25 @@ const bcrypt = require("bcryptjs");
 const prisma = require("../prismaClient");
 
 const registerUser = async (req, res) => {
-    const { name, email, password, role } = req.body;
+  const { name, email, password, role } = req.body;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = await prisma.user.create({
-        data: {
-            name,
-            email,
-            password: hashedPassword,
-            role,
-        },
-    });
+  const newUser = await prisma.user.create({
+    data: {
+      name,
+      email,
+      password: hashedPassword,
+      role,
+    },
+  });
 
-    res.json({
-        id: newUser.id,
-        name: newUser.name,
-        email: newUser.email,
-        role: newUser.role,
-    });
+  res.json({
+    id: newUser.id,
+    name: newUser.name,
+    email: newUser.email,
+    role: newUser.role,
+  });
 };
 
 const jwt = require("jsonwebtoken");
@@ -52,4 +52,12 @@ const loginUser = async (req, res) => {
   });
 };
 
-module.exports = { registerUser, loginUser };
+
+const getAllUsers = async (req, res) => {
+  const users = await prisma.user.findMany({
+    select: { id: true, name: true, email: true, role: true },
+  });
+  res.json(users);
+};
+
+module.exports = { registerUser, loginUser, getAllUsers };

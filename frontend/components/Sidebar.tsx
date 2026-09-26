@@ -12,7 +12,9 @@ const menuItems = [
     { label: "Quotations", href: "/quotations" },
     { label: "Invoices", href: "/invoices" },
     { label: "Payments", href: "/payments" },
+    { label: "Installations", href: "/installations" },
 ];
+
 
 export default function Sidebar() {
     const pathname = usePathname();
