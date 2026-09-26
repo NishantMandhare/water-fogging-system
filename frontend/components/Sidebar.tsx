@@ -9,6 +9,7 @@ const menuItems = [
     { label: "Products", href: "/products" },
     { label: "Inquiries", href: "/inquiries" },
     { label: "Site Visits", href: "/site-visits" },
+    { label: "Quotations", href: "/quotations" },
 ];
 
 export default function Sidebar() {
