@@ -11,6 +11,7 @@ const menuItems = [
     { label: "Site Visits", href: "/site-visits" },
     { label: "Quotations", href: "/quotations" },
     { label: "Invoices", href: "/invoices" },
+    { label: "Payments", href: "/payments" },
 ];
 
 export default function Sidebar() {
