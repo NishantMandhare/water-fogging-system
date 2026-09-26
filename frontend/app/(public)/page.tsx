@@ -1,33 +1,37 @@
 import Link from "next/link";
+import Image from "next/image";
+import HeroSlider from "@/components/HeroSlider";
+
 
 export default function HomePage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 to-cyan-500 text-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Beat the Heat with Professional Water Fogging Systems
+      <section className="relative min-h-screen flex items-center bg-gray-900 text-white overflow-hidden">
+        {/* Background Image Slider */}
+        <HeroSlider />
+
+        {/* Content */}
+        <div className="relative max-w-5xl mx-auto px-6 pt-32 pb-16 text-center">
+          <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
+            Beat the Heat.
+            <br />
+            Stay Cool, Always.
           </h1>
-          <p className="text-lg md:text-xl text-blue-50 mb-8 max-w-2xl mx-auto">
-            Cooling solutions for restaurants, farms, factories, and homes —
-            installed and maintained by experts across Maharashtra.
-          </p>
-          <div className="flex gap-4 justify-center flex-wrap">
+          <div className="flex flex-col items-center gap-4">
             <Link
               href="/contact"
-              className="bg-white text-blue-700 font-semibold px-8 py-3 rounded-lg hover:bg-blue-50 transition"
+              className="bg-white text-gray-900 font-bold text-lg px-10 py-4 rounded-lg hover:bg-gray-100 transition inline-block shadow-xl"
             >
-              Get a Free Quote
+              Get a Free Quote →
             </Link>
-            <Link
-              href="/services"
-              className="border-2 border-white text-white font-semibold px-8 py-3 rounded-lg hover:bg-white hover:text-blue-700 transition"
-            >
-              Our Services
-            </Link>
+            <p className="text-white/80 text-sm">
+              Trusted by 500+ homes and businesses
+            </p>
           </div>
         </div>
+
+
       </section>
 
       {/* About Section */}
