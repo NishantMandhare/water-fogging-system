@@ -30,6 +30,7 @@ export default function SiteVisitsPage() {
     const [siteVisits, setSiteVisits] = useState<SiteVisit[]>([]);
     const [inquiries, setInquiries] = useState<Inquiry[]>([]);
     const [showForm, setShowForm] = useState(false);
+    const [editingId, setEditingId] = useState<number | null>(null);
     const [inquiryId, setInquiryId] = useState("");
     const [visitDate, setVisitDate] = useState("");
     const [areaSize, setAreaSize] = useState("");
@@ -59,8 +60,7 @@ export default function SiteVisitsPage() {
 
     const handleSubmit = async () => {
         try {
-            await api.post("/sitevisits", {
-                inquiryId,
+            const payload = {
                 visitDate,
                 areaSize,
                 indoorOutdoor,
@@ -68,12 +68,19 @@ export default function SiteVisitsPage() {
                 electricalRequirement,
                 numberOfNozzles: numberOfNozzles ? Number(numberOfNozzles) : null,
                 notes,
-            });
+            };
+
+            if (editingId) {
+                await api.put(`/sitevisits/${editingId}`, payload);
+            } else {
+                await api.post("/sitevisits", { ...payload, inquiryId });
+            }
 
             const data = await api.get("/sitevisits");
             setSiteVisits(data);
 
             setShowForm(false);
+            setEditingId(null);
             setInquiryId("");
             setVisitDate("");
             setAreaSize("");
@@ -87,6 +94,32 @@ export default function SiteVisitsPage() {
         }
     };
 
+    const handleEdit = (visit: SiteVisit) => {
+        setEditingId(visit.id);
+        setInquiryId(String(visit.inquiry.id));
+        setVisitDate(visit.visitDate.slice(0, 10));
+        setAreaSize(visit.areaSize || "");
+        setIndoorOutdoor(visit.indoorOutdoor || "");
+        setWaterSource(visit.waterSource || "");
+        setElectricalRequirement(visit.electricalRequirement || "");
+        setNumberOfNozzles(visit.numberOfNozzles ? String(visit.numberOfNozzles) : "");
+        setNotes(visit.notes || "");
+        setShowForm(true);
+    };
+
+    const handleDelete = async (id: number) => {
+        const confirmed = confirm("Delete this site visit?");
+        if (!confirmed) return;
+
+        try {
+            await api.delete(`/sitevisits/${id}`);
+            const data = await api.get("/sitevisits");
+            setSiteVisits(data);
+        } catch (error) {
+            alert((error as Error).message);
+        }
+    };
+
 
     return (
         <div>
@@ -95,6 +128,7 @@ export default function SiteVisitsPage() {
                 <button
                     onClick={() => {
                         setShowForm(!showForm);
+                        setEditingId(null);
                         setInquiryId("");
                         setVisitDate("");
                         setAreaSize("");
@@ -115,7 +149,8 @@ export default function SiteVisitsPage() {
                     <select
                         value={inquiryId}
                         onChange={(e) => setInquiryId(e.target.value)}
-                        className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white"
+                        disabled={editingId !== null}
+                        className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white disabled:opacity-50"
                     >
                         <option value="">Select Inquiry</option>
                         {inquiries.map((inquiry) => (
@@ -173,7 +208,7 @@ export default function SiteVisitsPage() {
                         onClick={handleSubmit}
                         className="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold hover:bg-green-500 sm:col-span-2"
                     >
-                        Save
+                        {editingId ? "Update" : "Save"}
                     </button>
                 </div>
             )}
@@ -186,7 +221,9 @@ export default function SiteVisitsPage() {
                             <th className="px-3 py-2">Visit Date</th>
                             <th className="px-3 py-2">Area Size</th>
                             <th className="px-3 py-2">Nozzles</th>
+                            <th className="px-3 py-2"></th>
                         </tr>
+
                     </thead>
                     <tbody>
                         {siteVisits.map((visit) => (
@@ -197,6 +234,20 @@ export default function SiteVisitsPage() {
                                 </td>
                                 <td className="px-3 py-2">{visit.areaSize}</td>
                                 <td className="px-3 py-2">{visit.numberOfNozzles}</td>
+                                <td className="space-x-3 px-3 py-2">
+                                    <button
+                                        onClick={() => handleEdit(visit)}
+                                        className="text-blue-400 hover:underline"
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(visit.id)}
+                                        className="text-red-500 hover:underline"
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
